@@ -1,0 +1,17 @@
+<x:config xmlns:x="http://pinternals.com/alc">
+   <x:description>Тестовое описание</x:description>
+   <x:system nature="MDM" sid="MDV" host="hostname">
+      <x:description>MDM for dev</x:description>
+      <x:repository name="ASDW">
+         <x:description>All but Quake</x:description>
+         <x:region>Russian [RU]</x:region>
+         <x:account login="mdmpi" pwd="-mdmpipwd-"/>
+         <x:check login="mdmpi" region="Russian [RU]"/>
+      </x:repository>
+      <x:repository name="QUAKE">
+         <x:region>Russian [RU]</x:region>
+         <x:account login="mdmpi" pwd="-mdmpipwd-"/>
+         <x:check login="mdmpi" region="Russian [RU]"/>
+      </x:repository>
+   </x:system>
+</x:config>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" 
+  targetNamespace="http://pinternals.com/alc" 
+  xmlns:x="http://pinternals.com/alc">
+  
+  <xs:simpleType name="Nature">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="MDM"/>
+      <xs:enumeration value="J2EE_SAP"/>
+      <xs:enumeration value="ABAP"/>
+      <xs:enumeration value="JDBC"/>
+      <xs:enumeration value="HTTP"/>
+      <xs:enumeration value="FTP"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:element name="config">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="system"    type="x:system"     form="qualified" minOccurs="0" maxOccurs="unbounded" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="check">
+    <xs:attribute name="login"       type="xs:string"    form="unqualified" use="required" />
+    <xs:attribute name="region"      type="xs:string"    form="unqualified" use="optional" />
+    <xs:attribute name="report"      type="xs:string"    form="unqualified" use="optional" />
+  </xs:complexType>
+  
+  <xs:complexType name="system">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string"    form="qualified" minOccurs="0" maxOccurs="1" />
+      <xs:element name="account"     type="x:account"    form="qualified" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="repository"  type="x:RepMDM"     form="qualified" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="mandt"       type="x:MandtABAP"  form="qualified" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="check"       type="x:check"      form="qualified" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="host"        type="xs:string"    form="unqualified" use="required" />
+    <xs:attribute name="nature"      type="xs:string"    form="unqualified" use="required" />
+    <xs:attribute name="sid"         type="xs:string"    form="unqualified" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="account">
+    <xs:sequence>
+      <xs:element name="description" form="qualified" minOccurs="0" maxOccurs="1" type="xs:string"/>
+    </xs:sequence>
+    <xs:attribute name="login"       type="xs:string"    form="unqualified" use="required" />
+    <xs:attribute name="pwd"         type="xs:string"    form="unqualified" use="required" />
+  </xs:complexType>
+  
+  <xs:complexType name="RepMDM">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string"    form="qualified" minOccurs="0" maxOccurs="1" />
+      <xs:element name="region"      type="xs:string"    form="qualified" minOccurs="1" maxOccurs="unbounded" />
+      <xs:element name="account"     type="x:account"    form="qualified" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="check"       type="x:check"      form="qualified" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="name"        type="xs:string"    form="unqualified" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="MandtABAP">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string"    form="qualified" minOccurs="0" maxOccurs="1" />
+      <xs:element name="account"     type="x:account"    form="qualified" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="number"      type="xs:string"    form="unqualified" use="required" />
+  </xs:complexType>
+  
+</xs:schema>

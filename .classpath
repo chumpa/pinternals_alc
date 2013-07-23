@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry including="com/|pinternals_alc.xsd" kind="src" path=""/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="lib" path="alc_lib/commons-cli-1.2.jar"/>
+	<classpathentry kind="lib" path="alc_lib/mdm-admin.jar"/>
+	<classpathentry kind="lib" path="alc_lib/mdm-common.jar"/>
+	<classpathentry kind="lib" path="alc_lib/mdm-core.jar"/>
+	<classpathentry kind="lib" path="alc_lib/mdm-data.jar"/>
+	<classpathentry kind="lib" path="alc_lib/mdm-extension.jar"/>
+	<classpathentry kind="lib" path="alc_lib/mdm-protocol.jar"/>
+	<classpathentry kind="lib" path="alc_lib/simple-xml-2.7.jar"/>
+	<classpathentry kind="lib" path="pinternals_alc.xsd"/>
+	<classpathentry kind="output" path=""/>
+</classpath>
