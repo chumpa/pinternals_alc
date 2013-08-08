@@ -8,7 +8,8 @@
                 <attribute name="Main-Class" value="com.pinternals.alc.Main"/>
                 <attribute name="Class-Path" value=". alc_lib/commons-cli-1.2.jar alc_lib/mdm-core.jar alc_lib/mdm-protocol.jar alc_lib/mdm-common.jar alc_lib/mdm-admin.jar alc_lib/mdm-data.jar alc_lib/mdm-extension.jar alc_lib/simple-xml-2.7.jar alc_lib/pinternals_alc.xsd"/>
             </manifest>
-            <fileset dir="C:/github/pinternals_alc"/>
+            <fileset dir="C:/github/pinternals_alc" includes="com/"/>
+            <fileset dir="C:/github/pinternals_alc" includes="pinternals_alc.xsd"/>
         </jar>
         <delete dir="C:/github/pinternals_alc_run/alc_lib"/>
         <mkdir dir="C:/github/pinternals_alc_run/alc_lib"/>
@@ -20,6 +21,6 @@
         <copy file="C:/github/pinternals_alc/alc_lib/mdm-data.jar" todir="C:/github/pinternals_alc_run/alc_lib"/>
         <copy file="C:/github/pinternals_alc/alc_lib/mdm-extension.jar" todir="C:/github/pinternals_alc_run/alc_lib"/>
         <copy file="C:/github/pinternals_alc/alc_lib/simple-xml-2.7.jar" todir="C:/github/pinternals_alc_run/alc_lib"/>
-        <copy file="C:/github/pinternals_alc/pinternals_alc.xsd" todir="C:/github/pinternals_alc_run/alc_lib"/>
+        <!--copy file="C:/github/pinternals_alc/pinternals_alc.xsd" todir="C:/github/pinternals_alc_run/alc_lib"/-->
     </target>
 </project>

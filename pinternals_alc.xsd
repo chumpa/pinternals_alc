@@ -27,18 +27,25 @@
     <xs:attribute name="region"      type="xs:string"    form="unqualified" use="optional" />
     <xs:attribute name="report"      type="xs:string"    form="unqualified" use="optional" />
   </xs:complexType>
-  
+
+  <xs:complexType name="resource">
+    <xs:attribute name="name"        type="xs:string"    form="unqualified" use="required" />
+    <xs:attribute name="entry"       type="xs:string"    form="unqualified" use="required" />
+  </xs:complexType>
+
   <xs:complexType name="system">
     <xs:sequence>
       <xs:element name="description" type="xs:string"    form="qualified" minOccurs="0" maxOccurs="1" />
+      <xs:element name="resource"    type="x:resource"   form="qualified" minOccurs="0" maxOccurs="unbounded" />
       <xs:element name="account"     type="x:account"    form="qualified" minOccurs="0" maxOccurs="unbounded" />
       <xs:element name="repository"  type="x:RepMDM"     form="qualified" minOccurs="0" maxOccurs="unbounded" />
       <xs:element name="mandt"       type="x:MandtABAP"  form="qualified" minOccurs="0" maxOccurs="unbounded" />
       <xs:element name="check"       type="x:check"      form="qualified" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
-    <xs:attribute name="host"        type="xs:string"    form="unqualified" use="required" />
+    <xs:attribute name="host"        type="xs:string"    form="unqualified" use="optional" />
     <xs:attribute name="nature"      type="xs:string"    form="unqualified" use="required" />
     <xs:attribute name="sid"         type="xs:string"    form="unqualified" use="required" />
+    <xs:attribute name="version"     type="xs:string"    form="unqualified" use="optional" />
   </xs:complexType>
 
   <xs:complexType name="account">
@@ -47,6 +54,7 @@
     </xs:sequence>
     <xs:attribute name="login"       type="xs:string"    form="unqualified" use="required" />
     <xs:attribute name="pwd"         type="xs:string"    form="unqualified" use="required" />
+    <xs:attribute name="resources"   type="xs:string"    form="unqualified" use="optional" />
   </xs:complexType>
   
   <xs:complexType name="RepMDM">

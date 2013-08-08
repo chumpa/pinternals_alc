@@ -56,7 +56,6 @@ class Check {
 	void sync(Repository r) {
 		this.reg = new Region(region);
 		this.acc = Account.findByLogin(r.account, login);
-//		this.report
 	}
 
 	Region reg = null;
@@ -159,6 +158,9 @@ class Sys {
 
 	@Attribute (required=false)
 	String host;
+
+	@Attribute (required=false)
+	String version;
 
 	void addRepository(Repository r) {
 		repository.add(r);
