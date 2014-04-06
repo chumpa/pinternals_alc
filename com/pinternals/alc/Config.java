@@ -2,7 +2,9 @@ package com.pinternals.alc;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.simpleframework.xml.Attribute;
@@ -10,166 +12,127 @@ import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Namespace;
 import org.simpleframework.xml.Root;
-import org.simpleframework.xml.Text;
 import org.simpleframework.xml.core.Persister;
 
 // Configuration file handling
+// v0.01 -- very SAP MDM specific ("repository" as an resource)
+// v0.02 -- idea changed from MDM to common resource polling 
 
-@Namespace(reference="http://pinternals.com/alc")
+enum Auth {
+	AD, SSL, passwd, none;
+}
+enum Nature {
+	SAP_NW, SAP_MDM, STANDALONE;
+}
+enum Protocol {
+	FTP, HTTP, HTTPS, JDBC, MDM, RFC, SFTP;
+}
+enum Type {
+	URL, Repository, mandt;
+}
+
+
+@Namespace(reference=Config.namespaceALC)
 class Account {
-	Repository rep = null;
-//	Mandt mandt=null;
-	Account() {super();}
-	Account(Repository r, String login, String password, String description) {
-		this.rep = r;
-		this.login = login;
-		this.pwd = password;
-		if (this.rep!=null) this.rep.account.add(this);
-	}
-
-	@Attribute
-	String login = "", pwd="";
-	
-	static Account findByLogin(List<Account> al, String login) {
-		for (Account a: al) if (login.equals(a.login)) return a;
-		return null;
-	}
-}
-
-@Namespace(reference="http://pinternals.com/alc")
-class Check {
-	@Attribute (required=true)
-	String login; 
-
-	@Attribute (required=false)
-	String region=null, report=null; 
-
-	Check() {
-		super();
-	}
-	Check(Account a, Region l) {
-		this.acc = a;
-		this.reg = l;
-		this.login  = a.login;
-		this.region = l.name;
-	}
-	void sync(Repository r) {
-		this.reg = new Region(region);
-		this.acc = Account.findByLogin(r.account, login);
-	}
-
-	Region reg = null;
-	Account acc = null;
-}
-
-@Namespace(reference="http://pinternals.com/alc")
-class Region {
-	@Text
-	String name;
-	Region() {super();}
-	Region(String s) {
-		this.name = s;
-	}
-}
-
-@Namespace(reference="http://pinternals.com/alc")
-class Mandt {
-	Sys sys = null;
-	Mandt() {super();}
-	Mandt(Sys ss, String number) {
-		this.sys = ss;
-		this.number = number;
-	}
-
-	@Attribute(required=true)
-	String number="";
-}
-
-
-@Namespace(reference="http://pinternals.com/alc")
-class Repository {
-	Repository() {super();}
 	Sys system = null;
-	Repository(Sys s, String name, String descr, Region ... regs) {
-		this.system = s;
-		this.name = name;
-		this.description = descr;
-		for (Region lc: regs) 
-			region.add(lc);
-		if (s!=null) this.system.repository.add(this);
-	}
-
-	@Attribute
-	String name = null;
+	Resource res = null;
+	Account() { super(); }
 
 	@Element(required=false)
-	@Namespace(reference="http://pinternals.com/alc")
+	@Namespace(reference=Config.namespaceALC)
+	String description = "";
+	@Attribute(required=true)
+	String login="";
+	@Attribute(required=false)
+	String passwd="";
+}
+
+@Namespace(reference=Config.namespaceALC)
+class Check {
+	Sys system = null;
+	Account acc = null;
+	Resource res = null;
+	Check() {super();}
+
+	@Element(required=false)
+	@Namespace(reference=Config.namespaceALC)
 	String description = "";
 
-	@ElementList(type=Region.class, inline=true, required=true, name="region", entry="region")
-	@Namespace(reference="http://pinternals.com/alc")
-	List<Region> region = new ArrayList<Region>();
+	@Attribute (required=true)
+	String login = null; 
+
+	@Attribute (required=false)
+	String locale = null; 
+
+}
+
+@Namespace(reference=Config.namespaceALC)
+class Resource {
+	Resource() {super();}
+	Sys system = null;
+
+	@Attribute(required=true)
+	String name = null;
+
+	@Attribute(required=true)
+	Type type = null;
+
+	@Attribute(required=false)
+	String locale = null;
+
+	@Attribute (required=false)
+	Auth auth;
+	@Attribute (required=false)
+	Protocol protocol;
+
+	@Element(required=false)
+	@Namespace(reference = Config.namespaceALC)
+	String description = "";
 
 	@ElementList(type=Account.class, inline=true, required=false)
-	@Namespace(reference="http://pinternals.com/alc")
+	@Namespace(reference=Config.namespaceALC)
 	List<Account> account = new ArrayList<Account>();
-	
+
 	@ElementList(type=Check.class, inline=true, required=false)
-	@Namespace(reference="http://pinternals.com/alc")
+	@Namespace(reference=Config.namespaceALC)
 	List<Check> check = new ArrayList<Check>();
 }
 
 @Root(name="system")
-@Namespace(reference="http://pinternals.com/alc")
+@Namespace(reference=Config.namespaceALC)
 class Sys {
 	Sys() {super();}
-	Sys(String nat, String sid, String host, String description) {
-		this.nature = ENature.valueOf(nat);
-		this.sid = sid;
-		this.host = host;
-		this.description = description;
-	}
 
 	@Element(required=false)
-	@Namespace(reference="http://pinternals.com/alc")
+	@Namespace(reference=Config.namespaceALC)
 	String description = null;
 
 	@ElementList(type=Account.class, inline=true, required=false)
-	@Namespace(reference="http://pinternals.com/alc")
+	@Namespace(reference=Config.namespaceALC)
 	List<Account> account = new ArrayList<Account>();
 
-	@ElementList(type=Repository.class, inline=true, required=false)
-	@Namespace(reference="http://pinternals.com/alc")
-	List<Repository> repository = new ArrayList<Repository>();
-
-	@ElementList(type=Mandt.class, inline=true, required=false)
-	@Namespace(reference="http://pinternals.com/alc")
-	List<Mandt> mandt = new ArrayList<Mandt>();
+	@ElementList(type=Resource.class, inline=true, required=false)
+	@Namespace(reference=Config.namespaceALC)
+	List<Resource> resource = new ArrayList<Resource>();
 
 	@ElementList(type=Check.class, inline=true, required=false)
-	@Namespace(reference="http://pinternals.com/alc")
+	@Namespace(reference=Config.namespaceALC)
 	List<Check> check = new ArrayList<Check>();
 
 	@Attribute (required=false)
-	ENature nature;
+	Nature nature;
 
 	@Attribute (required=false)
-	String sid;
+	String sid, version;
 
-	@Attribute (required=false)
-	String host;
-
-	@Attribute (required=false)
-	String version;
-
-	void addRepository(Repository r) {
-		repository.add(r);
-	}
+	@Attribute (required=true)
+	String connect;
 }
 
 @Root
-@Namespace(reference="http://pinternals.com/alc", prefix="x")
+@Namespace(reference=Config.namespaceALC, prefix="x")
 public class Config {
+	static final String namespaceALC = "http://pinternals.com/alc";
 	private static Logger log = Logger.getLogger(Config.class.getName());
 	
 	@Attribute(required=false)
@@ -177,11 +140,11 @@ public class Config {
 	String schemaLocation;
 	
 	@Element(required=false)
-   	@Namespace(reference="http://pinternals.com/alc")
+   	@Namespace(reference=Config.namespaceALC)
    	String description;
 
    	@ElementList(type=Sys.class, inline=true, required=false)
-   	@Namespace(reference="http://pinternals.com/alc")
+   	@Namespace(reference=Config.namespaceALC)
    	List<Sys> system = new ArrayList<Sys>();
    	Config() {super();}
 
@@ -192,10 +155,36 @@ public class Config {
 		log.fine(LoginCheck.format("Config002read", f.getAbsolutePath() ));
 		
 		// пост-обработка после чтения
-		for (Sys s: cf.system) 
-			for (Repository r: s.repository) 
-				for (Check c: r.check) 
-					c.sync(r);
+		for (Sys s: cf.system) {
+			Map<String,Account> x = new HashMap<String,Account>(), y = new HashMap<String,Account>();
+			
+			for (Account a: s.account) {
+				a.system = s;
+				a.res = null;
+				x.put(a.login, a);
+			}
+			for (Check c: s.check) { 
+				c.system = s;
+				c.acc = x.get(c.login);
+				assert c.acc!=null;
+//				c.res = null;
+			}
+			for (Resource r: s.resource) {
+				y.clear();
+				for (Account a: r.account) {
+					a.system = s;
+					a.res = r;
+					y.put(a.login, a);
+				}
+				for (Check c: r.check) {
+					c.system = s;
+					c.acc = y.get(c.login);
+					c.acc = c.acc!=null ? c.acc : x.get(c.login);
+					assert c.acc!=null;
+//					c.res = r;
+				}
+			}
+		}
 
 		log.fine(LoginCheck.format("Config003read", f.getAbsolutePath() ));
 		return cf;
@@ -209,18 +198,51 @@ public class Config {
 	static Config createExample() throws Exception {
 		Config ex = new Config();
 		ex.description = "Тестовое описание";
-		Sys s = new Sys("MDM", "MDV", "hostname", "MDM for dev");
-		ex.system.add(s);
-		Region ru = new Region(MdmClient.locRU);
-		Repository classifiers = new Repository(s, "ASDW", "All but Quake", ru);
-		Account a = new Account(classifiers, "mdmpi", "-mdmpipwd-", null);
-		Check c = new Check(a, ru);
-		classifiers.check.add(c);
+//		Sys s = new Sys("MDM", "MDV", "hostname", "MDM for dev");
+//		ex.system.add(s);
+//		Region ru = new Region(MdmClient.locRU);
+//		Repository classifiers = new Repository(s, "ASDW", "All but Quake", ru);
+//		Account a = new Account(classifiers, "mdmpi", "-mdmpipwd-", null);
+//		Check c = new Check(a, ru);
+//		classifiers.check.add(c);
+//
+//		Repository kladr = new Repository(s, "QUAKE", null, ru);
+//		Account a2 = new Account(kladr, "mdmpi", "-mdmpipwd-", null);
+//		Check c2 = new Check(a2, ru);
+//		kladr.check.add(c2);
 
-		Repository kladr = new Repository(s, "QUAKE", null, ru);
-		Account a2 = new Account(kladr, "mdmpi", "-mdmpipwd-", null);
-		Check c2 = new Check(a2, ru);
-		kladr.check.add(c2);
+		Sys j = new Sys();
+		j.sid = "PIJ";
+		j.connect = "http://sapsrv010:50600";
+		j.nature = Nature.SAP_NW;
+		ex.system.add(j);
+
+//		Account gavriil = new Account("Gavriil", "AAaBBbCc=", "Good person");
+//		j.account.add(gavriil);
+//		Account devil = new Account("devil", "tobeopposite", "Not a good person");
+//		j.account.add(devil);
+
+//		Resource ume = new Resource(j, "/useradmin", null);
+//		ume.auth = "webform731";
+//		j.resource.add(ume);
+//		ume.check.add(new Check(gavriil));
+
+//		Resource sld = new Resource(j, "/sld", null);
+//		sld.auth = "webform731";
+//		j.resource.add(sld);
+//		sld.check.add(new Check(gavriil));
+//
+//		Resource sqrep = new Resource(j, "/rep/support/SimpleQuery", null);
+//		sqrep.auth = "webform731";
+//		j.resource.add(sqrep);
+//		sqrep.check.add(new Check(gavriil));
+//		sqrep.check.add(new Check(devil));
+//
+//		Resource sqdir = new Resource(j, "/dir/support/SimpleQuery", null);
+//		sqdir.auth = "webform731";
+//		j.resource.add(sqdir);
+//		sqdir.check.add(new Check(gavriil));
+//		sqdir.check.add(new Check(devil));
 
 		return ex;
 	}

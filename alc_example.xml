@@ -1,17 +1,31 @@
 <x:config xmlns:x="http://pinternals.com/alc">
    <x:description>Тестовое описание</x:description>
-   <x:system nature="MDM" sid="MDV" host="hostname">
-      <x:description>MDM for dev</x:description>
-      <x:repository name="ASDW">
-         <x:description>All but Quake</x:description>
-         <x:region>Russian [RU]</x:region>
-         <x:account login="mdmpi" pwd="-mdmpipwd-"/>
-         <x:check login="mdmpi" region="Russian [RU]"/>
-      </x:repository>
-      <x:repository name="QUAKE">
-         <x:region>Russian [RU]</x:region>
-         <x:account login="mdmpi" pwd="-mdmpipwd-"/>
-         <x:check login="mdmpi" region="Russian [RU]"/>
-      </x:repository>
+   
+   <x:system nature="STANDALONE" sid="yandex" connect="http://ya.ru">
+      <x:resource name="/">
+         <x:check>
+            <x:description>Is available?</x:description>
+         </x:check>
+      </x:resource>
+   </x:system>
+   
+   <x:system nature="SAP_NW" sid="PIJ" connect="http://sapsrv012:50600">
+      <x:description>SAP dev</x:description>
+      <x:account login="Gavriil" passwd="AAaBBbCc="/>
+      <x:account login="devil" passwd="tobeopposite"/>
+      <x:resource name="/useradmin" type="URL">
+         <x:check login="Gavriil"/>
+      </x:resource>
+      <!--x:resource name="/sld">
+         <x:check login="Gavriil"/>
+      </x:resource>
+      <x:resource name="/rep/support/SimpleQuery">
+         <x:check login="Gavriil"/>
+         <x:check login="devil"/>
+      </x:resource>
+      <x:resource name="/dir/support/SimpleQuery">
+         <x:check login="Gavriil"/>
+         <x:check login="devil"/>
+      </x:resource-->
    </x:system>
 </x:config>

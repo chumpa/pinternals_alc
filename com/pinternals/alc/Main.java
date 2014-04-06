@@ -12,7 +12,7 @@ import org.apache.commons.cli.PosixParser;
 
 public class Main {
 	private static Logger log = Logger.getLogger(Main.class.getName());
-	
+
 	public static void main(String[] args) {
 		InputStream isLog = null;
 		CommandLine cmd = null;
@@ -54,7 +54,7 @@ public class Main {
 				cfg = Config.readConfig(example);
 			} else if (cmd.hasOption("version")) { 
 				System.out.println("http://pinternals.com/alc version " + LoginCheck.version);
-				System.out.println("MDM client API version " + MdmClient.getClientAPIversion());
+				System.out.println("MDM client API version " + SapMdmClient.getClientAPIversion());
 				System.out.println("RFC client version: UNAVAILABLE yet");
 				System.out.println("FTP and HTTP clients: from Java Runtime version " + System.getProperty("java.runtime.version"));
 //				for (Object k: System.getProperties().keySet()) {
